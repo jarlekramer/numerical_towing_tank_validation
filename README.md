@@ -2,7 +2,7 @@
 
 This repository contains a collection of OpenFoam case folders that reproduce towing tank experiments from the scientific litterature. 
 
-The settings in each simualtion is based on research into best practices for numerical towing tank simulations, done by me - Jarle Vinje Kramer - at the Norwegian Univeristy of Science and Technology. The main intent behind this repository is to show examples of simulation cases for marine applications. 
+The settings in each simualtion is based on research into best practices for numerical towing tank simulations, done by me - Jarle Vinje Kramer - at the Norwegian University of Science and Technology. The main intent behind this repository is to show examples of simulation cases for marine applications. 
 
 At the moment, the repository contains the following:
 
