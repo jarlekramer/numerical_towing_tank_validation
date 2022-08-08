@@ -1,0 +1,40 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  plus                                  |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+
+forces
+{
+	type forces;
+	libs ( "libforces.so" );
+	rho rho;
+	log yes;
+	writeControl timeStep;
+	writeInterval 1;
+	patches ( hull deck rudder );
+	rhoInf 999.1;
+	CofR (0.0 0.0 0.0);
+}
+
+forceCoeffs
+{
+	type forceCoeffs;
+	libs ( "libforces.so" );
+	log yes;
+	writeControl timeStep;
+	writeInterval 1;
+	rho rho;
+	patches ( hull deck rudder );
+	rhoInf 999.1;
+	CofR (0.0 0.0 0.0);
+	liftDir (0 1 0);
+	dragDir (1 0 0);
+	pitchAxis (0 0 1);
+	magUInf 1.0807261578700316;
+	lRef 5.5172;
+	Aref 4.0418537591453125;
+}

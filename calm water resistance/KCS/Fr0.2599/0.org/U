@@ -1,0 +1,78 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  plus                                  |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+	version     2.0;
+	format      ascii;
+	class       volVectorField;
+	location    "0";
+	object      U;
+}
+
+#include      "include/initialConditions";
+
+dimensions    [0 1 -1 0 0 0 0];
+
+internalField uniform (2.196164 0 0);
+
+boundaryField
+{
+	#includeEtc	"caseDicts/setConstraintTypes"
+
+	inlet
+	{
+		type	fixedValue;
+		value	$internalField;
+	}
+
+
+	outlet
+	{
+		type	outletPhaseMeanVelocity;
+		alpha	alpha.water;
+		Umean	$Umean;
+		value	$internalField;
+	}
+
+
+	midPlane
+	{
+		type	symmetryPlane;
+	}
+
+
+	top
+	{
+		type	pressureInletOutletVelocity;
+		value	uniform (0 0 0);
+		tangentialVelocity	uniform (2.196164 0 0);
+	}
+
+
+	hull
+	{
+		type	movingWallVelocity;
+		value	uniform (0 0 0);
+	}
+
+
+	deck
+	{
+		type	movingWallVelocity;
+		value	uniform (0 0 0);
+	}
+
+
+	rudder
+	{
+		type	movingWallVelocity;
+		value	uniform (0 0 0);
+	}
+
+}

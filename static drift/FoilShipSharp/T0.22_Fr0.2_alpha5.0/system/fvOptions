@@ -1,0 +1,111 @@
+FoamFile
+{
+	version    2.0;
+	format    ascii;
+	class    dictionary;
+	location    "constant";
+	object    fvOptions;
+}
+
+waveDamping
+{
+	type            vectorCodedSource;
+	selectionMode   all;
+	
+	fields          (U);
+	name            verticalDamping;
+	
+	codeInclude
+	#{
+	#};
+	
+	codeAddSup
+	#{
+		// -------------------- force model coefficients -----------------------
+		const scalar f1      = 37.32915628688799; // linear damping coefficient
+		const scalar f2      = 0.0; // quadratic damping coefficient
+		const scalar x_start = -6.035398464840982; // Start of wave damping zone
+		const scalar x_end   = 10.435398464840983; // End of wave damping zone
+		const scalar y_end   = 4.4; // End of wave damping zone
+		const scalar rampLength = 2.7646015351590187; 	// Length of gradually increasing damping factor
+		const int n          = 2;  // Variable to adjust shape of ramping function
+	
+		// -------------------- Load in necessary fields -----------------------
+		const scalarField& V          = mesh_.V();
+		const vectorField& cellCenter = mesh_.C();
+		const volScalarField& rho_m   = mesh_.lookupObject<volScalarField>("rho");
+	
+		vectorField& uSource = eqn.source();
+		const vectorField& U = eqn.psi();
+	
+		const labelList& cellIDs = cells();
+	
+		scalar kappa      = 0.0;
+		scalar rampFactor = 0.0;
+		scalar x          = 0.0;
+		scalar y          = 0.0;
+		scalar w          = 0.0;
+		scalar x_dist     = 0.0;
+		scalar y_dist     = 0.0;
+		scalar dist       = 0.0;
+	
+		const vector forceDir(0.0, 0.0, 1.0);
+	
+		// -------------------- Apply source -----------------------
+		forAll(cellIDs, i)
+		{
+			label cellID = cellIDs[i];
+	
+			x = cellCenter[cellID][0];
+			y = Foam::mag(cellCenter[cellID][1]);
+	
+			w = U[cellID][2];
+	
+			if (x < x_start)
+			{
+				x_dist = x_start - x;
+			}
+			else if (x > x_end)
+			{
+				x_dist = x - x_end;
+			}
+			else
+			{
+				x_dist = 0.0;
+			}
+	
+			if (y > y_end)
+			{
+				y_dist = y - y_end;
+			}
+			else
+			{
+				y_dist = 0.0;
+			}
+	
+			dist = Foam::sqrt(Foam::pow(x_dist, 2) + Foam::pow(y_dist, 2));
+	
+			if (dist > 0.0)
+			{
+				kappa = Foam::pow( dist / rampLength, n);
+	
+				if (kappa > 1.0)
+				{
+					kappa = 1.0;
+				}
+	
+				rampFactor = (Foam::exp(kappa) - 1) / (Foam::exp(1.0) - 1);
+	
+				uSource[i] += rho_m[cellID] * V[cellID] * (f1 + f2 * Foam::mag(w) ) * rampFactor * w * forceDir;
+			}
+		}
+	#};
+	
+	codeCorrect
+	#{
+	#};
+	
+	codeConstrain
+	#{
+	#};
+}

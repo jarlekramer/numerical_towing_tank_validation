@@ -1,0 +1,280 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  plus                                  |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+	version    2.0;
+	format     ascii;
+	class      dictionary;
+	object     snappyHexMeshDict;
+}
+
+
+	castellatedMesh    true;
+	snap               true;
+	addLayers          true;
+
+geometry
+{
+	kelvinWake1.obj
+	{
+		type triSurfaceMesh;
+		name kelvinWake1;
+	}
+
+	kelvinWake2.obj
+	{
+		type triSurfaceMesh;
+		name kelvinWake2;
+	}
+
+	ship
+	{
+		type triSurfaceMesh;
+		file "ship.obj";
+
+		regions
+		{
+			ship_ship_hull
+			{
+				name hull;
+			}
+			ship_ship_deck
+			{
+				name deck;
+			}
+			ship_ship_rudder
+			{
+				name rudder;
+			}
+		}
+	}
+
+	freeSurfaceBox1
+	{
+		type searchableBox;
+		min (-999.000000 -999.000000 -0.068965);
+		max (999.000000 999.000000 0.068965);
+	}
+
+	freeSurfaceBox2
+	{
+		type searchableBox;
+		min (-999.000000 -999.000000 -0.068965);
+		max (999.000000 999.000000 0.068965);
+	}
+
+	freeSurfaceBox3
+	{
+		type searchableBox;
+		min (-999.000000 -999.000000 -0.068965);
+		max (999.000000 999.000000 0.068965);
+	}
+
+	freeSurfaceBox4
+	{
+		type searchableBox;
+		min (-999.000000 -999.000000 -0.068965);
+		max (999.000000 999.000000 0.068965);
+	}
+
+	freeSurfaceBox5
+	{
+		type searchableBox;
+		min (-999.000000 -999.000000 -0.068965);
+		max (999.000000 999.000000 0.068965);
+	}
+
+}
+
+castellatedMeshControls
+{
+	maxLocalCells 5000000;
+	maxGlobalCells 2000000000;
+	minRefinementCells 10;
+	maxLoadUnbalance 0.1;
+	nCellsBetweenLevels 5;
+	resolveFeatureAngle 60;
+	locationInMesh (-5.517 1.500 -0.717);
+	allowFreeStandingZoneFaces true;
+
+	features
+	(
+		{
+			file "ship.eMesh";
+			level 4;
+		}
+	);
+
+	refinementSurfaces
+	{
+		ship
+		{
+			level (4 4);
+			regions
+			{
+				ship_ship_hull
+				{
+					level (5 5);
+					patchIno
+					{
+						type wall;
+					}
+				}
+				ship_ship_deck
+				{
+					level (4 4);
+					patchIno
+					{
+						type wall;
+					}
+				}
+				ship_ship_rudder
+				{
+					level (7 7);
+					patchIno
+					{
+						type wall;
+					}
+				}
+			}
+		}
+
+	}
+
+	refinementRegions
+	{
+		kelvinWake1
+		{
+			mode inside;
+			levels ((1.0 1));
+		}
+
+		kelvinWake2
+		{
+			mode inside;
+			levels ((1.0 2));
+		}
+
+		freeSurfaceBox1
+		{
+			mode inside;
+			levels ((1.000000 0));
+			levelIncrement (4 4 (0 0 1));
+		}
+
+		freeSurfaceBox2
+		{
+			mode inside;
+			levels ((1.000000 0));
+			levelIncrement (3 3 (0 0 2));
+		}
+
+		freeSurfaceBox3
+		{
+			mode inside;
+			levels ((1.000000 0));
+			levelIncrement (2 2 (0 0 3));
+		}
+
+		freeSurfaceBox4
+		{
+			mode inside;
+			levels ((1.000000 0));
+			levelIncrement (1 1 (0 0 4));
+		}
+
+		freeSurfaceBox5
+		{
+			mode inside;
+			levels ((1.000000 0));
+			levelIncrement (0 0 (0 0 5));
+		}
+
+	}
+}
+
+snapControls
+{
+	nSmoothPatch              3;
+	tolerance                 2.0;
+	nSolveIter                100;
+	nRelaxIter                5;
+	nFeatureSnapIter          10;
+	implicitFeatureSnap       false;
+	explicitFeatureSnap       true;
+	multiRegionFeatureSnap    false;
+}
+
+addLayersControls
+{
+	meshShrinker displacementMotionSolver;
+	solver       displacementLaplacian;
+	displacementLaplacianCoeffs
+	{
+		diffusivity    quadratic inverseDistance 1(wall);
+	}
+
+	layers
+	{
+		hull
+		{
+			nSurfaceLayers 7;
+		}
+		deck
+		{
+			nSurfaceLayers 0;
+		}
+		rudder
+		{
+			nSurfaceLayers 0;
+		}
+	}
+
+	relativeSizes false;
+	finalLayerThickness 0.0035759197079021695;
+	expansionRatio 1.15;
+	minThickness 0.00077298438524505;
+	nGrow 0;
+	featureAngle 60;
+	slipFeatureAngle 30;
+	layerTerminationAngle 30;
+	nRelaxIter 5;
+	nSmoothSurfaceNormals 3;
+	nSmoothNormals 3;
+	nSmoothThickness 10;
+	maxFaceThicknessRatio 0.5;
+	maxThicknessToMedialRatio 0.3;
+	minMedianAxisAngle 90;
+	nBufferCellsNoExtrude 0;
+	nLayerIter 50;
+	nRelaxedIter 20;
+}
+
+meshQualityControls
+{
+	maxNonOrtho            65;
+	maxBoundarySkewness    20;
+	maxInternalSkewness    4;
+	maxConcave             80;
+	minVol                 -1e+30;
+	minTetQuality          -1e+30;
+	minArea                -1;
+	minTwist               0.05;
+	minDeterminant         0.001;
+	minFaceWeight          0.05;
+	minVolRatio            0.01;
+	minTriangleTwist       -1;
+	nSmoothScale           4;
+	errorReduction         0.75;
+	relaxed
+	{
+		maxNonOrtho    75;
+	}
+}
+
+mergeTolerance 1e-06;

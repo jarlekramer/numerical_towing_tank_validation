@@ -1,0 +1,16 @@
+Simulation information
+Re 5842919.31
+L  7.278600
+yPlus 60.00
+nrLayers 2
+finalLayerFactor 0.500
+layerExpansion 1.200
+smallestSize/L 0.001249
+baseSize/L 0.039979
+boundaryLayerHeight/L 0.016401
+refinementLevels 5
+nCellsBetweenLevels 5
+solver interFoam
+turbulenceModel kOmegaSST
+turbulenceIntenisty 1.000%
+layerThickness/boundaryLayerHeight 0.069826

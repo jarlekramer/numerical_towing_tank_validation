@@ -1,0 +1,11 @@
+flowVelocity          (1.921538 0 0);
+Umean                  1.921538;
+turbulentKE            5.538460e-04;
+turbulentOmega         1.319991e+00;
+turbulentEpsilon       4.386431e-07;
+turbulentNut           3.420000e-06;
+transitionTu           1.000000e+00;
+transitionLambdaTheta  0.000000e+00;
+transitionFLambdaTheta 1.000000e+00;
+transitionReThetat     5.843016e+02;
+#inputMode       merge;

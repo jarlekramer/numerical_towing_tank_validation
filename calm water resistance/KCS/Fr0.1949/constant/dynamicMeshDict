@@ -1,0 +1,66 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  plus                                  |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+	version     2.0;
+	format      ascii;
+	class       dictionary;
+	location    "constant";
+	object      dynamicMeshDict;
+}
+
+dynamicFvMesh       dynamicMotionSolverFvMesh;
+motionSolverLibs    ("libsixDoFRigidBodyMotion.so");
+solver              sixDoFRigidBodyMotion;
+
+sixDoFRigidBodyMotionCoeffs
+{
+	patches                   (hull deck rudder);
+	innerDistance             0.60655;
+	outerDistance             1.81965;
+	centreOfMass              (0.050285632 0.000000000 -0.111394226);
+	mass                      823.7450928909294;
+	momentOfInertia           (79.297902024 3644.717138029 3707.977818268);
+	rhoInf                    1;
+	report                    on;
+	reportToFile              on;
+	value                     uniform (0 0 0);
+	accelerationRelaxation    0.4;
+	accelerationDamping       0.9;
+	solver
+	{
+		type    Newmark;
+	}
+	constraints
+	{
+		zAxis
+		{
+			sixDoFRigidBodyMotionConstraint    line;
+			direction                          (0 0 1);
+		}
+		yPlane
+		{
+			sixDoFRigidBodyMotionConstraint    axis;
+			axis                               (0.000000 1.000000 0);
+		}
+	}
+	restraints
+	{
+		translationDamper
+		{
+			sixDoFRigidBodyMotionRestraint    linearDamper;
+			coeff                             24533.617097155955;
+		}
+		rotationDamper
+		{
+			sixDoFRigidBodyMotionRestraint    sphericalAngularDamper;
+			coeff                             110434.77986482921;
+		}
+	}
+}
+
